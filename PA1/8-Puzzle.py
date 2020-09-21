@@ -1,7 +1,7 @@
 import math
 from queue import PriorityQueue
 #setup problem
-input=120843765
+input=810324765
 
 
 #inportant variables
@@ -84,6 +84,7 @@ def Solution(node):
         node= node.parent
     result.reverse()
     print(result)
+    return "Success"
 
 """ --------------------------------------------------Testers for helper functions------------------------------------------------------------------- """
 
@@ -106,10 +107,9 @@ def Test_Child_Node():
     print()
 
 
-
-
 #Test_Visulaize()
 #Test_Child_Node()
+
 
 """ ----------------------------------------------------- Uninformed Search functions---------------------------------------------------------------- """
 
@@ -189,11 +189,11 @@ def DLS(PuzzleList, limit):
                     pass
                 else:
                     result= DLS_Helper(child, limit-1)
-                    if result=="cutoff":
-                        cutoff_occurred=True
-                    elif result=="failure":
+                    if result==None:
                         pass
-                    else:
+                    elif result=="cutoff":
+                        cutoff_occurred=True
+                    elif result!="failure":
                         return result
             if (cutoff_occurred):
                 return "cutoff"
@@ -214,37 +214,25 @@ def iterative_deepening(PuzzleList):
         result= DLS(PuzzleList, depth)
         if result!="cutoff":
             return result
+            
 
 
 """ ----------------------------------------------------Testers for Uninformed Search functions---------------------------------------------------------------- """
 
-def TestBFS():
-    PuzzleList= [1,2,0,8,4,3,7,6,5]
-    BFS(PuzzleList)
 
-def TestDFS():
-    PuzzleList= [1,2,0,8,4,3,7,6,5]
-    DFS(PuzzleList)
-
-def TestDLS():
-    PuzzleList= [1,2,0,8,4,3,7,6,5]
-    DLS(PuzzleList, 2)
-
-def TestIDS():
-    PuzzleList= [1,2,0,8,4,3,7,6,5]
-    iterative_deepening(PuzzleList)
-
-#TestBFS()
-#TestDFS()
-#TestDLS()
-#TestIDS()
+    
+BFS(PuzzleList)  
+DFS(PuzzleList)
+DLS(PuzzleList,11)
+iterative_deepening(PuzzleList)
 
 
 
-""" --------------------------informed Search-------------------------- """
+
+
+""" --------------------------------------------------------------informed Search--------------------------------------------------------------------------------"""
 ## num_wrong_tiles:which counts the number of tiles in the wrong location
 def num_wrong_tiles(PuzzleList):
-    SolutionPuzzle= [1,2,3,8,0,4,7,6,5]
     counter=0
     for i in range(9):
         if(PuzzleList[i]!=SolutionPuzzle[i]):
@@ -255,7 +243,6 @@ def num_wrong_tiles(PuzzleList):
 
 ## manhattan_distance: which calculates the total manhattan distance for all tiles to move to their correct locations
 def manhattan_distance(PuzzleList):
-    SolutionPuzzle= [1,2,3,8,0,4,7,6,5]
     counter=0
     for i in range(9):
         a=PuzzleList.index(i)
@@ -278,14 +265,14 @@ def astar(PuzzleList, functionName):
     openList.put(node)
     explored.add(''.join(map(str,node.list)))
     while not openList.empty():
-        print("loop")
+        
         q= openList.get()
-        visualize(q)
-        print(q.f)
+        
+        
         for act in ["U", "D","L", "R"]:
             child=child_node(q, act)
-            print()
-            visualize(child)
+            
+            
             
             if(child==None):
                 pass
@@ -302,15 +289,14 @@ def astar(PuzzleList, functionName):
                 else:
                     print("wrong functionName was inputed")
                 # child.changef(child.path_cost+child.h)
-                print(child.h)
-                print(child.path_cost)
+               
                 child.f=child.h+child.path_cost
-                print(child.f)
+                
                 openList.put(child)
         
 
 """ -------------------tester for infrom Search -------------------"""
-PuzzleList= [1,2,0,8,4,3,7,6,5]
+
 #print(num_wrong_tiles(PuzzleList))
 #print(manhattan_distance(PuzzleList))
-astar([1,2,0,8,4,3,7,6,5], "num_wrong_tiles")
+#astar([1,2,0,8,4,3,7,6,5], "manhattan_distance")
