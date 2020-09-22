@@ -170,39 +170,34 @@ def DFS(PuzzleList):
 
 #DLS
 def DLS(PuzzleList, limit):
+    node = Node(PuzzleList, None, None, 0) 
+    return DLS_Helper(node, limit)
 
-    def DLS_Helper(node, limit):
-        if node==None:
-            return "failure"
-        explored.add(''.join(map(str,node.list)))
-        if(node.list==SolutionPuzzle):
-            return Solution(node)
-        elif limit<=0:
+def DLS_Helper(node, limit):
+    if node==None:
+        return "failure"
+    if(node.list==SolutionPuzzle):
+        return Solution(node)
+    elif limit<=0:
+        return "cutoff"
+    else:
+        cutoff_occurred=False
+        for act in ["U", "D","L", "R"]:
+            child=child_node(node, act)
+            if(child==None):
+                pass
+            else:
+                result= DLS_Helper(child, limit-1)
+                if result=="cutoff":
+                    cutoff_occurred=True
+                elif result!="failure":
+                    return result
+        if (cutoff_occurred):
             return "cutoff"
         else:
-            cutoff_occurred=False
-            for act in ["U", "D","L", "R"]:
-                child=child_node(node, act)
-                if(child==None):
-                    pass
-                elif (''.join(map(str,child.list)) in explored):
-                    pass
-                else:
-                    result= DLS_Helper(child, limit-1)
-                    if result==None:
-                        pass
-                    elif result=="cutoff":
-                        cutoff_occurred=True
-                    elif result!="failure":
-                        return result
-            if (cutoff_occurred):
-                return "cutoff"
-            else:
-                return "failure"
+            return "failure"
 
-    node = Node(PuzzleList, None, None, 0) 
-    explored =set()
-    return DLS_Helper(node, limit)
+
 
 
 
@@ -223,7 +218,9 @@ def iterative_deepening(PuzzleList):
     
 BFS(PuzzleList)  
 DFS(PuzzleList)
+
 DLS(PuzzleList,11)
+
 iterative_deepening(PuzzleList)
 
 
