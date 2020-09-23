@@ -274,6 +274,8 @@ def astar(PuzzleList, functionName):
     explored.add(''.join(map(str,node.list)))
     while not openList.empty():
         q= openList.get()
+        if(q.list==SolutionPuzzle):
+            return Solution(q)
         for act in ["U", "D","L", "R"]:
             child=child_node(q, act)
             if(child==None):
@@ -282,8 +284,6 @@ def astar(PuzzleList, functionName):
                 pass
             else:
                 explored.add(''.join(map(str,child.list)))
-                if(child.list==SolutionPuzzle):
-                    return Solution(child)
                 if(functionName=="num_wrong_tiles"):
                     child.h=num_wrong_tiles(child.list)
                 elif(functionName=="manhattan_distance"):
