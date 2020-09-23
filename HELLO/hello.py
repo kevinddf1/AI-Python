@@ -1,6 +1,8 @@
-result=['U','D']
-while
-if result!="cutoff":
-     print("here")
-     loop=False
+import time
+
+start = time.process_time()   
+i=2+2
+print("time take: " + str(time.process_time() - start))
      
+
+#381204765

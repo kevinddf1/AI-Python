@@ -1,15 +1,36 @@
+import sys
 import math
+import time
 from queue import PriorityQueue
+
+
+# Author: Fan Ding
+# Email: ding0322@umn.edu
+# UMN CSCI 5511 AI
+# Prof: Andy Exley
+# Date: 09/22/2020 
+
+
+
+
 #setup problem
-input=810324765
+input=sys.argv[1]
+
+#Make PuzzleList from the input integer number
+PuzzleList=[int(x) for x in str(input)] 
+checklist= PuzzleList.copy()
+checklist.sort()
+if(checklist!=[0,1,2,3,4,5,6,7,8]):
+    print("wrong type of input, check your input and restart")
+    exit()
+
 
 
 #inportant variables
 SolutionPuzzle= [1,2,3,8,0,4,7,6,5]
 
-#Make PuzzleList from the input integer number
-PuzzleList=[int(x) for x in str(input)] 
-print(PuzzleList)
+
+
 
 
 """ ---------------------------------------------------Build a Node class------------------------------------------------------------------ """
@@ -212,16 +233,6 @@ def iterative_deepening(PuzzleList):
             
 
 
-""" ----------------------------------------------------Testers for Uninformed Search functions---------------------------------------------------------------- """
-
-
-    
-BFS(PuzzleList)  
-DFS(PuzzleList)
-
-DLS(PuzzleList,11)
-
-iterative_deepening(PuzzleList)
 
 
 
@@ -262,15 +273,9 @@ def astar(PuzzleList, functionName):
     openList.put(node)
     explored.add(''.join(map(str,node.list)))
     while not openList.empty():
-        
         q= openList.get()
-        
-        
         for act in ["U", "D","L", "R"]:
             child=child_node(q, act)
-            
-            
-            
             if(child==None):
                 pass
             elif (''.join(map(str,child.list)) in explored):
@@ -285,15 +290,44 @@ def astar(PuzzleList, functionName):
                     child.h=manhattan_distance(child.list)
                 else:
                     print("wrong functionName was inputed")
-                # child.changef(child.path_cost+child.h)
-               
-                child.f=child.h+child.path_cost
-                
+                child.f=child.h+child.path_cost      
                 openList.put(child)
         
 
-""" -------------------tester for infrom Search -------------------"""
+""" -----------------------------------------------------------------main---------------------------------------------------------------"""
 
-#print(num_wrong_tiles(PuzzleList))
-#print(manhattan_distance(PuzzleList))
-#astar([1,2,0,8,4,3,7,6,5], "manhattan_distance")
+print("Here is your input Puzzel:")
+n = Node(PuzzleList, None, None, 0) 
+visualize(n)
+
+
+
+
+#DFS TEST
+print()
+print("Depth-First Search result:")
+start = time.process_time()   
+DFS(PuzzleList)
+print("time take: " + str(time.process_time() - start))
+
+
+#IDDFS TEST
+print()
+print("Iterative Deepening result:")
+start = time.process_time() 
+iterative_deepening(PuzzleList)
+print("time take: " + str(time.process_time() - start))
+
+
+# A* Test
+print()
+print("A* on num_wrong_tiles ")
+start = time.process_time() 
+astar(PuzzleList, "num_wrong_tiles")
+print("time take: " + str(time.process_time() - start))
+
+print()
+print("A* on manhattan_distance ")
+start = time.process_time() 
+astar(PuzzleList, "manhattan_distance")
+print("time take: " + str(time.process_time() - start))
