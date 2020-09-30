@@ -20,7 +20,7 @@ print("Welcome to 8-Queens Problem")
 print()
 
 
-""" ---------------------------------------------------Build a Node class------------------------------------------------------------------ """
+""" --------------------------------------------Build a Node class---------------------------------- """
 
 
 class Node:
@@ -48,9 +48,15 @@ class Node:
                         collisions+=1
         return collisions
 
+""" ------------------------------------print the state function for debug------------------------------- """
+##print out the state in terminal
+def printState(arr):
+    for row in arr: 
+        print(row) 
+    pass
 
 
-""" --------------------------------------local search fucntions----------------------------------- """
+""" --------------------------------------hillclimb_sa-------------------------------------------------- """
 
 #That uses hill climbing with steepest-ascent to attempt to solve the problem. 
 # Have your code detect a plateau or local maximum and give up if those are encountered.
@@ -95,7 +101,7 @@ def min_collision(current):
     return min_neighbor
 
 
-
+""" --------------------------------------hillclimb_fc---------------------------------------------- """
 #That implements first-choice hill climbing for the same problem.
 def hillclimb_fc(init):
     step=0
@@ -118,8 +124,6 @@ def hillclimb_fc(init):
         current=nextNode
     return -1
 
-
-
 def generate_neighbor(current, randMove):
     x= math.floor(randMove/8)
     y=randMove%8
@@ -130,36 +134,26 @@ def generate_neighbor(current, randMove):
     return result
 
 
+""" --------------------------------------sim_anneal-------------------------------------------------- """
 
 #That implements simulated annealing for the problem. Choose your temperature and schedule.
 def sim_anneal(init):
+    step=0
+    current=Node(init)
+    
     pass
 
 
 
 
 
-""" -------------functions about genarate random initial states---------------------------- """
-##genarate one state
-def genarateOneState():
-
-    arr = [[0 for i in range(cols)] for j in range(rows)] 
-
-    for i in range(rows):
-        r = random.randint(0, cols-1)
-        arr[i][r]=1
-       
-    return arr
-
-##print out the state in terminal
-def printState(arr):
-    for row in arr: 
-        print(row) 
-    pass
 
 
 
-""" --------------------------------------------get_h test and hill climb functions using book example--------------------------------- """
+
+
+
+""" ------------------------------testers using one book example------------------------- """
 
 ## this example is form book page 123 
 testA = [[0 for i in range(cols)] for j in range(rows)] 
@@ -193,7 +187,18 @@ print()
 print("hillclimb_fc:")
 resultState=hillclimb_fc(testA)
 if(resultState==-1):
-    print("can't find a solution")
+    print("didn't find a solution")
+else:
+    printState(resultState[0])
+    nodeResult= Node(resultState[0])
+    print("the collision is "+str(nodeResult.get_h())) ##should be 0
+print()
+
+# test sim_anneal
+print("sim_anneal:")
+resultState=sim_anneal(testA)
+if(resultState==-1):
+    print("didn't find a solution")
 else:
     printState(resultState[0])
     nodeResult= Node(resultState[0])
@@ -202,26 +207,44 @@ print()
 
 
 
+""" ------------------------functions about genarate random initial states---------------------------- """
+##genarate one state
+def genarateOneState():
 
-""" --------------------------------main-------------------------------------------------- """
-#this program generate many random initial states and test them with 3 different search alg to find the ave steps of them
+    arr = [[0 for i in range(cols)] for j in range(rows)] 
+
+    for i in range(rows):
+        r = random.randint(0, cols-1)
+        arr[i][r]=1
+       
+    return arr
+
+""" ------------------------------------------main-------------------------------------------------- """
+# this program generate many random initial states and test them with 3 different search alg to find the ave steps of them
+
 # many=100
 # with open('readme.txt', 'w') as f:
 #     success_num_sa=0
 #     success_num_fc=0
+#     success_num_sim=0
 #     success_total_step_sa=0
 #     success_total_step_fc=0
+#     success_total_step_sim=0
 
 #     for x in range(many):
 #         a= genarateOneState()
 #         result_sa=hillclimb_sa(a)
 #         result_fc=hillclimb_fc(a)
+#         result_sim=sim_anneal(a)
 #         if(result_sa!=-1):
 #             success_num_sa+=1
 #             success_total_step_sa+=result_sa[1]
 #         if(result_fc!=-1):
 #             success_num_fc+=1
 #             success_total_step_fc+=result_fc[1]  
+#         if(result_sim!=-1):
+#             success_num_sim+=1
+#             success_total_step_sim+=result_sim[1]  
 
 
 #     tempS="Here is the report for our local search: "+ "\n" +"and we used "+str(many)+" random initial states to test them\n\n"
@@ -229,6 +252,8 @@ print()
 #     tempS = "hillclimb_sa average step: "+str(success_total_step_sa/success_num_sa)+" \n"
 #     f.write(tempS)
 #     tempS = "hillclimb_fc average step: "+str(success_total_step_fc/success_num_fc)+" \n"
+#     f.write(tempS)
+#     tempS = "sim_anneal average step: "+str(success_total_step_sim/success_num_sim)+" \n"
 #     f.write(tempS)
 
 
