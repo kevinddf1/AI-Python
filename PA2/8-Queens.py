@@ -4,7 +4,7 @@ import time
 from queue import PriorityQueue
 import random 
 from copy import copy, deepcopy
-
+import itertools
 
 # Author: Fan Ding
 # Email: ding0322@umn.edu
@@ -140,7 +140,21 @@ def generate_neighbor(current, randMove):
 def sim_anneal(init):
     step=0
     current=Node(init)
-    
+    for i in itertools.count(start=0):
+        T=10000-i
+        if (T==0):
+            if(current.get_h()!=0):
+                #print("this is a local min")
+                return -1
+            return current.state, step
+        child= generate_neighbor(current, random.randint(0, 63))
+        deltaE= child.get_h()-current.get_h()
+        if(deltaE<0):
+            step+=1
+            current=child
+        elif(random.uniform(0, 1)<=math.exp(deltaE/T)):
+            step+=1
+            current=child
     pass
 
 
