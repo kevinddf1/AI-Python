@@ -17,6 +17,7 @@ from copy import copy, deepcopy
 cols=8
 rows=8
 print("Welcome to 8-Queens Problem")
+print()
 
 
 """ ---------------------------------------------------Build a Node class------------------------------------------------------------------ """
@@ -93,9 +94,42 @@ def min_collision(current):
         return -1
     return min_neighbor
 
+
+
 #That implements first-choice hill climbing for the same problem.
 def hillclimb_fc(init):
-    pass
+    step=0
+    current=Node(init)
+    
+    while(1):
+        step+=1
+        ##this generate 64 numbers in random order, each number is represent to one neighbor
+        randomMoveList=random.sample(range(0, 64), 64)
+        count=0
+        nextNode=generate_neighbor(current, randomMoveList[count])
+        while(nextNode.get_h()>=current.get_h()):
+            if(count==63):
+                if(current.get_h()!=0):
+                #print("this is a local min")
+                    return -1
+                return current.state, step
+            count+=1
+            nextNode=generate_neighbor(current, randomMoveList[count])
+        current=nextNode
+    return -1
+
+
+
+def generate_neighbor(current, randMove):
+    x= math.floor(randMove/8)
+    y=randMove%8
+    tempState=deepcopy(current.state)
+    tempState[x][tempState[x].index(1)]=0 ## make the 1 in x row 0
+    tempState[x][y]=1
+    result=Node(tempState)
+    return result
+
+
 
 #That implements simulated annealing for the problem. Choose your temperature and schedule.
 def sim_anneal(init):
@@ -125,83 +159,77 @@ def printState(arr):
 
 
 
-""" --------------------------------------------get_h test and hill climb functions using book examples--------------------------------- """
+""" --------------------------------------------get_h test and hill climb functions using book example--------------------------------- """
 
-## this 2 example are form book page 123 
-
-# testA = [[0 for i in range(cols)] for j in range(rows)] 
-# testA[0][3]=1
-# testA[1][2]=1
-# testA[2][1]=1
-# testA[3][4]=1
-# testA[4][3]=1
-# testA[5][2]=1
-# testA[6][1]=1
-# testA[7][2]=1
-# printState(testA)
-# nodeA= Node(testA)
-# print("the collision is "+str(nodeA.get_h())) ##should be 17
-# print()
-
-# ##test hillclimb_sa
-# resultState=hillclimb_sa(testA)
-# if(resultState==-1):
-#     print("can't find a solution")
-# else:
-#     printState(resultState)
-#     nodeResult= Node(resultState)
-#     print("the collision is "+str(nodeResult.get_h())) ##should be 0
-# print()
-
-##test hillclimb_fc
-
-# testB= [[0 for i in range(cols)] for j in range(rows)] 
-# testB[0][0]=1
-# testB[1][5]=1
-# testB[2][1]=1
-# testB[3][4]=1
-# testB[4][6]=1
-# testB[5][3]=1
-# testB[6][7]=1
-# testB[7][2]=1
-# printState(testB)
-# nodeB= Node(testB)
-# print("the collision is "+str(nodeB.get_h())) ## should be 1
-# print()
-
-# ##test hillclimb_sa
-# resultState2=hillclimb_sa(testB)
-# printState(resultState2)
-# nodeResult2= Node(resultState2)
-# print("the collision is "+str(nodeResult2.get_h())) ##should be 1
-# print()
-
-## test hillclimb_fc
+## this example is form book page 123 
+testA = [[0 for i in range(cols)] for j in range(rows)] 
+testA[0][3]=1
+testA[1][2]=1
+testA[2][1]=1
+testA[3][4]=1
+testA[4][3]=1
+testA[5][2]=1
+testA[6][1]=1
+testA[7][2]=1
+print("Here is the given input state:")
+printState(testA)
+nodeA= Node(testA)
+print("the collision is "+str(nodeA.get_h())) ##should be 17
+print()
 
 
+# test hillclimb_sa
+print("hillclimb_sa:")
+resultState=hillclimb_sa(testA)
+if(resultState==-1):
+    print("can't find a solution")
+else:
+    printState(resultState[0])
+    nodeResult= Node(resultState[0])
+    print("the collision is "+str(nodeResult.get_h())) ##should be 0
+print()
+
+# test hillclimb_fc
+print("hillclimb_fc:")
+resultState=hillclimb_fc(testA)
+if(resultState==-1):
+    print("can't find a solution")
+else:
+    printState(resultState[0])
+    nodeResult= Node(resultState[0])
+    print("the collision is "+str(nodeResult.get_h())) ##should be 0
+print()
 
 
 
 
 """ --------------------------------main-------------------------------------------------- """
-with open('readme.txt', 'w') as f:
-    success_num_sa=0
-    success_total_step_sa=0
-    for x in range(100):
-        a= genarateOneState()
-        result=hillclimb_sa(a)
-        if(result==-1):
-            #f.write("test: Failed\n")
-            pass
-        else:
-            success_num_sa+=1
-            step = result[1]
-            success_total_step_sa+=step
-            #SuccessStr= "Success, step: "+str(step) + "\n"
-            #f.write(SuccessStr)
+#this program generate many random initial states and test them with 3 different search alg to find the ave steps of them
+# many=100
+# with open('readme.txt', 'w') as f:
+#     success_num_sa=0
+#     success_num_fc=0
+#     success_total_step_sa=0
+#     success_total_step_fc=0
 
-    tempS = "hillclimb_sa average step: "+str(success_total_step_sa/success_num_sa)+" \n"
-    f.write(tempS)
+#     for x in range(many):
+#         a= genarateOneState()
+#         result_sa=hillclimb_sa(a)
+#         result_fc=hillclimb_fc(a)
+#         if(result_sa!=-1):
+#             success_num_sa+=1
+#             success_total_step_sa+=result_sa[1]
+#         if(result_fc!=-1):
+#             success_num_fc+=1
+#             success_total_step_fc+=result_fc[1]  
+
+
+#     tempS="Here is the report for our local search: "+ "\n" +"and we used "+str(many)+" random initial states to test them\n\n"
+#     f.write(tempS)
+#     tempS = "hillclimb_sa average step: "+str(success_total_step_sa/success_num_sa)+" \n"
+#     f.write(tempS)
+#     tempS = "hillclimb_fc average step: "+str(success_total_step_fc/success_num_fc)+" \n"
+#     f.write(tempS)
 
 
 
