@@ -54,19 +54,21 @@ class Node:
 #That uses hill climbing with steepest-ascent to attempt to solve the problem. 
 # Have your code detect a plateau or local maximum and give up if those are encountered.
 def hillclimb_sa(init):
+    step=0
     current=Node(init)
     while(1):
+        step+=1
         ##loop all neighbor, the the min collision
         min_neighbor= min_collision(current) ##min_collision return the neighbor with the smallest collision
         ## plateau check
         if(min_neighbor==-1):
-            print("plateau detected")
+            #print("plateau detected")
             return -1
         if(current.get_h()<=min_neighbor.get_h()):
             if(current.get_h()!=0):
-                print("this is a local min")
+                #print("this is a local min")
                 return -1
-            return current.state
+            return current.state, step
         current=min_neighbor
     return -1
 def min_collision(current):
@@ -126,29 +128,30 @@ def printState(arr):
 """ --------------------------------------------get_h test and hill climb functions using book examples--------------------------------- """
 
 ## this 2 example are form book page 123 
-testA = [[0 for i in range(cols)] for j in range(rows)] 
-testA[0][3]=1
-testA[1][2]=1
-testA[2][1]=1
-testA[3][4]=1
-testA[4][3]=1
-testA[5][2]=1
-testA[6][1]=1
-testA[7][2]=1
-printState(testA)
-nodeA= Node(testA)
-print("the collision is "+str(nodeA.get_h())) ##should be 17
-print()
 
-##test hillclimb_sa
-resultState=hillclimb_sa(testA)
-if(resultState==-1):
-    print("can't find a solution")
-else:
-    printState(resultState)
-    nodeResult= Node(resultState)
-    print("the collision is "+str(nodeResult.get_h())) ##should be 0
-print()
+# testA = [[0 for i in range(cols)] for j in range(rows)] 
+# testA[0][3]=1
+# testA[1][2]=1
+# testA[2][1]=1
+# testA[3][4]=1
+# testA[4][3]=1
+# testA[5][2]=1
+# testA[6][1]=1
+# testA[7][2]=1
+# printState(testA)
+# nodeA= Node(testA)
+# print("the collision is "+str(nodeA.get_h())) ##should be 17
+# print()
+
+# ##test hillclimb_sa
+# resultState=hillclimb_sa(testA)
+# if(resultState==-1):
+#     print("can't find a solution")
+# else:
+#     printState(resultState)
+#     nodeResult= Node(resultState)
+#     print("the collision is "+str(nodeResult.get_h())) ##should be 0
+# print()
 
 ##test hillclimb_fc
 
@@ -179,33 +182,46 @@ print()
 
 
 
+
 """ --------------------------------main-------------------------------------------------- """
-
-# a= genarateOneState()
-# printState(a)
-
-# hillclimb_sa(a)
-# hillclimb_fc(a)
-# sim_anneal(a)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 with open('readme.txt', 'w') as f:
-    f.write("hello world!!!!!!!!!\n")
+    success_num_sa=0
+    success_total_step_sa=0
+    for x in range(100):
+        a= genarateOneState()
+        result=hillclimb_sa(a)
+        if(result==-1):
+            #f.write("test: Failed\n")
+            pass
+        else:
+            success_num_sa+=1
+            step = result[1]
+            success_total_step_sa+=step
+            #SuccessStr= "Success, step: "+str(step) + "\n"
+            #f.write(SuccessStr)
+
+    tempS = "hillclimb_sa average step: "+str(success_total_step_sa/success_num_sa)+" \n"
+    f.write(tempS)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
