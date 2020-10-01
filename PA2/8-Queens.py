@@ -140,22 +140,21 @@ def generate_neighbor(current, randMove):
 def sim_anneal(init):
     step=0
     current=Node(init)
-    for i in itertools.count(start=0):
-        T=10000-i
-        if (T==0):
-            if(current.get_h()!=0):
-                #print("this is a local min")
-                return -1
+    for i in itertools.count(start=1):
+        if(current.get_h()==0):
             return current.state, step
+        T=0.01/math.log10(i+1)
+        if (i==1000):
+            return -1
         child= generate_neighbor(current, random.randint(0, 63))
         deltaE= child.get_h()-current.get_h()
         if(deltaE<0):
             step+=1
             current=child
-        elif(random.uniform(0, 1)<=math.exp(deltaE/T)):
+        elif(random.uniform(0, 1)<=math.exp(-deltaE/T)):
             step+=1
             current=child
-    pass
+    return -1
 
 
 
@@ -194,7 +193,7 @@ if(resultState==-1):
 else:
     printState(resultState[0])
     nodeResult= Node(resultState[0])
-    print("the collision is "+str(nodeResult.get_h())) ##should be 0
+    print("solution found, detected solution collision is "+str(nodeResult.get_h())) ##should be 0
 print()
 
 # test hillclimb_fc
@@ -205,7 +204,7 @@ if(resultState==-1):
 else:
     printState(resultState[0])
     nodeResult= Node(resultState[0])
-    print("the collision is "+str(nodeResult.get_h())) ##should be 0
+    print("solution found, detected solution collision is "+str(nodeResult.get_h())) ##should be 0
 print()
 
 # test sim_anneal
@@ -216,7 +215,7 @@ if(resultState==-1):
 else:
     printState(resultState[0])
     nodeResult= Node(resultState[0])
-    print("the collision is "+str(nodeResult.get_h())) ##should be 0
+    print("solution found, detected solution collision is "+str(nodeResult.get_h())) ##should be 0
 print()
 
 
@@ -236,40 +235,43 @@ def genarateOneState():
 """ ------------------------------------------main-------------------------------------------------- """
 # this program generate many random initial states and test them with 3 different search alg to find the ave steps of them
 
-# many=100
-# with open('readme.txt', 'w') as f:
-#     success_num_sa=0
-#     success_num_fc=0
-#     success_num_sim=0
-#     success_total_step_sa=0
-#     success_total_step_fc=0
-#     success_total_step_sim=0
+many=1000
+print("running tests on "+ str(many)+  " random initial states...\n")
+print()
+with open('readme.txt', 'w') as f:
+    success_num_sa=0
+    success_num_fc=0
+    success_num_sim=0
+    success_total_step_sa=0
+    success_total_step_fc=0
+    success_total_step_sim=0
 
-#     for x in range(many):
-#         a= genarateOneState()
-#         result_sa=hillclimb_sa(a)
-#         result_fc=hillclimb_fc(a)
-#         result_sim=sim_anneal(a)
-#         if(result_sa!=-1):
-#             success_num_sa+=1
-#             success_total_step_sa+=result_sa[1]
-#         if(result_fc!=-1):
-#             success_num_fc+=1
-#             success_total_step_fc+=result_fc[1]  
-#         if(result_sim!=-1):
-#             success_num_sim+=1
-#             success_total_step_sim+=result_sim[1]  
+    for x in range(many):
+        a= genarateOneState()
+        result_sa=hillclimb_sa(a)
+        result_fc=hillclimb_fc(a)
+        result_sim=sim_anneal(a)
+        if(result_sa!=-1):
+            success_num_sa+=1
+            success_total_step_sa+=result_sa[1]
+        if(result_fc!=-1):
+            success_num_fc+=1
+            success_total_step_fc+=result_fc[1]  
+        if(result_sim!=-1):
+            success_num_sim+=1
+            success_total_step_sim+=result_sim[1]  
 
 
-#     tempS="Here is the report for our local search: "+ "\n" +"and we used "+str(many)+" random initial states to test them\n\n"
-#     f.write(tempS)
-#     tempS = "hillclimb_sa average step: "+str(success_total_step_sa/success_num_sa)+" \n"
-#     f.write(tempS)
-#     tempS = "hillclimb_fc average step: "+str(success_total_step_fc/success_num_fc)+" \n"
-#     f.write(tempS)
-#     tempS = "sim_anneal average step: "+str(success_total_step_sim/success_num_sim)+" \n"
-#     f.write(tempS)
+    tempS="Here is the report for our local search: "+ "\n" +"and we used "+str(many)+" random initial states to test them\n\n"
+    f.write(tempS)
+    tempS = "hillclimb_sa average step: "+str(success_total_step_sa/success_num_sa)+" \n"
+    f.write(tempS)
+    tempS = "hillclimb_fc average step: "+str(success_total_step_fc/success_num_fc)+" \n"
+    f.write(tempS)
+    tempS = "sim_anneal average step: "+str(success_total_step_sim/success_num_sim)+" \n"
+    f.write(tempS)
 
+    print("Finished running. Check out the readme.txt to see report details")
 
 
 
