@@ -1,3 +1,10 @@
+# Author: Fan Ding
+# Email: ding0322@umn.edu
+# UMN CSCI 5511 AI
+# Prof: Andy Exley
+# Date: 10/06/2020 
+
+
 '''
 othellogame module
 
@@ -70,7 +77,7 @@ class RandomPlayer:
         return curr_move
 
 
-""" ---------------------------------My code: AlphabetaPlayer------------------------------ """
+""" ---------------------------------My code: UtilityFunction------------------------------ """
 def UtilityFunction(state):
     if(state==None):
         return None
@@ -98,6 +105,7 @@ def UtilityFunction(state):
 
  
 
+""" ---------------------------------My code: MinimaxPlayer------------------------------ """
 
 class MinimaxPlayer:
     def __init__(self, mycolor, depth):
@@ -156,6 +164,7 @@ class MinimaxPlayer:
 
 
 
+""" ---------------------------------My code: AlphabetaPlayer--------------------------------- """
 
 class AlphabetaPlayer:
     def __init__(self, mycolor, depth):
@@ -166,33 +175,47 @@ class AlphabetaPlayer:
         return self.color
 
     def make_move(self, state):
-        def MiniMax_Decision(state):
-            temp_max=negative_infnity
-            act=None
-            for x in range(len(legals)): 
-                r=Min_value(result(state, legals[x]), 1)
-                if r>temp_max:
-                    temp_max=r
-                    act= legals[x]
-            return act
+        def alpha_beta_search(state):
+            result= Max_value(state, 0, negative_infnity, positive_infnity)##result is [untility, action]
+            return result[1]
             
-        def Max_value(state, depthcounter):
+        def Max_value(state, depthcounter, alpha, beta):
             legals = actions(state)
+            act=None
             if (terminal_test(state) or depthcounter==self.depth):
-                return UtilityFunction(state)
+                return UtilityFunction(state), act
             v = negative_infnity
-            for x in range(len(legals)):
-                v = max(v, Min_value(result(state, legals[x]), depthcounter+1))
-            return v
 
-        def Min_value(state, depthcounter):
+            for x in range(len(legals)): 
+                tem=Min_value(result(state, legals[x]), depthcounter+1, alpha, beta)
+                r=tem[0]
+                if r>v:
+                    v=r
+                    act= legals[x] 
+
+                if v>=beta:
+                    return v, act
+                alpha=max(alpha, v)
+            return v, act
+
+        def Min_value(state, depthcounter, alpha, beta):
             legals = actions(state)
+            act=None
             if (terminal_test(state) or depthcounter==self.depth):
-                return UtilityFunction(state)
+                return UtilityFunction(state), act
             v = positive_infnity
-            for x in range(len(legals)):
-                v = min(v, Max_value(result(state, legals[x]), depthcounter+1))
-            return v
+
+            for x in range(len(legals)): 
+                tem=Min_value(result(state, legals[x]), depthcounter+1, alpha, beta)
+                r=tem[0]
+                if r<v:
+                    v=r
+                    act= legals[x] 
+                
+                if v<=alpha:
+                    return v, act
+                beta= min(beta, v)
+            return v , act
 
         curr_move = None
         legals = actions(state)
@@ -203,7 +226,7 @@ class AlphabetaPlayer:
             print("Black ", end='')
         print(" to play.")
         print("Legal moves are " + str(legals))
-        curr_move = MiniMax_Decision(state)
+        curr_move = alpha_beta_search(state)
         print("we picked a optimal move "+ str(curr_move))
         return curr_move
 
@@ -429,7 +452,7 @@ def play_game(p1 = None, p2 = None):
             display_final(s)
             return
 
-
+""" ---------------------------------------------------tests----------------------------------------- """
 def main():
     #Human Player vs Human Player
     #play_game()
@@ -438,11 +461,11 @@ def main():
     #play_game(HumanPlayer(BLACK), RandomPlayer(WHITE))
 
     #random player against minimaxplayer
-    play_game(RandomPlayer(BLACK), MinimaxPlayer(WHITE, 2))
+    #play_game(RandomPlayer(BLACK), MinimaxPlayer(WHITE, 2))
 
 
-    #Human player against alphabetplayer
-    #play_game(HumanPlayer(BLACK), AlphabetaPlayer(WHITE))
+    #random player against alphabetplayer
+    play_game(RandomPlayer(BLACK), AlphabetaPlayer(WHITE , 2))
 
 if __name__ == '__main__':
     main()
