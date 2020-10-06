@@ -13,6 +13,7 @@ function, as each player might have their own separate way of calculating utilit
 '''
 import copy
 import random
+import math
 
 
 WHITE = 1
@@ -20,6 +21,9 @@ BLACK = -1
 EMPTY = 0
 SIZE = 8
 SKIP = "SKIP"
+positive_infnity = float('inf') 
+negative_infnity = float('-inf') 
+
 
 class OthelloPlayerTemplate:
     '''Template class for an Othello Player
@@ -95,7 +99,56 @@ def UtilityFunction(state):
  
 
 
+class MinimaxPlayer:
+    def __init__(self, mycolor, depth):
+        self.color = mycolor
+        self.depth = depth
+    
+    def get_color(self):
+        return self.color
 
+    def make_move(self, state):
+
+        def MiniMax_Decision(state):
+            temp_max=negative_infnity
+            act=None
+            for x in range(len(legals)): 
+                r=Min_value(result(state, legals[x]), 1)
+                if r>temp_max:
+                    temp_max=r
+                    act= legals[x]
+            return act
+            
+        def Max_value(state, depthcounter):
+            legals = actions(state)
+            if (terminal_test(state) or depthcounter==self.depth):
+                return UtilityFunction(state)
+            v = negative_infnity
+            for x in range(len(legals)):
+                v = max(v, Min_value(result(state, legals[x]), depthcounter+1))
+            return v
+
+        def Min_value(state, depthcounter):
+            legals = actions(state)
+            if (terminal_test(state) or depthcounter==self.depth):
+                return UtilityFunction(state)
+            v = positive_infnity
+            for x in range(len(legals)):
+                v = min(v, Max_value(result(state, legals[x]), depthcounter+1))
+            return v
+
+        curr_move = None
+        legals = actions(state)
+        display(state)
+        if self.color == 1:
+            print("White ", end='')
+        else:
+            print("Black ", end='')
+        print(" to play.")
+        print("Legal moves are " + str(legals))
+        curr_move = MiniMax_Decision(state)
+        print("we picked a optimal move "+ str(curr_move))
+        return curr_move
 
 
 
@@ -105,25 +158,53 @@ def UtilityFunction(state):
 
 
 class AlphabetaPlayer:
-    def __init__(self, mycolor):
+    def __init__(self, mycolor, depth):
         self.color = mycolor
+        self.depth = depth
 
     def get_color(self):
         return self.color
 
     def make_move(self, state):
+        def MiniMax_Decision(state):
+            temp_max=negative_infnity
+            act=None
+            for x in range(len(legals)): 
+                r=Min_value(result(state, legals[x]), 1)
+                if r>temp_max:
+                    temp_max=r
+                    act= legals[x]
+            return act
+            
+        def Max_value(state, depthcounter):
+            legals = actions(state)
+            if (terminal_test(state) or depthcounter==self.depth):
+                return UtilityFunction(state)
+            v = negative_infnity
+            for x in range(len(legals)):
+                v = max(v, Min_value(result(state, legals[x]), depthcounter+1))
+            return v
+
+        def Min_value(state, depthcounter):
+            legals = actions(state)
+            if (terminal_test(state) or depthcounter==self.depth):
+                return UtilityFunction(state)
+            v = positive_infnity
+            for x in range(len(legals)):
+                v = min(v, Max_value(result(state, legals[x]), depthcounter+1))
+            return v
+
         curr_move = None
-        # legals = actions(state)
-        # display(state)
-        # if self.color == 1:
-        #     print("White ", end='')
-        # else:
-        #     print("Black ", end='')
-        # print(" to play.")
-        # print("Legal moves are " + str(legals))
-        # randIndex= random.randint(0, len(legals)-1)
-        # print("we picked a random move "+ str(legals[randIndex]))
-        # curr_move = legals[randIndex]
+        legals = actions(state)
+        display(state)
+        if self.color == 1:
+            print("White ", end='')
+        else:
+            print("Black ", end='')
+        print(" to play.")
+        print("Legal moves are " + str(legals))
+        curr_move = MiniMax_Decision(state)
+        print("we picked a optimal move "+ str(curr_move))
         return curr_move
 
 
@@ -354,9 +435,13 @@ def main():
     #play_game()
 
     #Human player against random machine player
-    play_game(HumanPlayer(BLACK), RandomPlayer(WHITE))
+    #play_game(HumanPlayer(BLACK), RandomPlayer(WHITE))
 
-    #Human player against AI
+    #random player against minimaxplayer
+    play_game(RandomPlayer(BLACK), MinimaxPlayer(WHITE, 2))
+
+
+    #Human player against alphabetplayer
     #play_game(HumanPlayer(BLACK), AlphabetaPlayer(WHITE))
 
 if __name__ == '__main__':
