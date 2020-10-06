@@ -1,11 +1,10 @@
 import math
 import itertools
 import random
-a=1
 
-for i in itertools.count(start=1):
-    if(i==150):
-        break
-    print(i)
-    T=10000-math.pow(i,1.9)
-    print(T)
+legals=[1,2,3,4,5]
+print(len(legals))
+print()
+for i in range(10):
+    a= random.randint(0, len(legals)-1)
+    print(a)
