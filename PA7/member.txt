@@ -1,0 +1,9 @@
+member(X,[X|_]).
+member(X,[_|T]) :-
+    member(X,T).
+
+
+
+allinlist([X | T], B) :-
+    member(X , B),
+    (len(T , 0); allinlist(T,B)).

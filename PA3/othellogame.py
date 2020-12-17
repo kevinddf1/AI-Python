@@ -465,7 +465,7 @@ def main():
 
 
     #random player against alphabetplayer
-    play_game(RandomPlayer(BLACK), AlphabetaPlayer(WHITE , 2))
+    play_game(RandomPlayer(BLACK), AlphabetaPlayer(WHITE , 7))
 
 if __name__ == '__main__':
     main()

@@ -1,0 +1,56 @@
+m=20 n=5
+True: 96              False: 4
+m=20 n=10
+True: 100              False: 0
+m=20 n=15
+True: 100              False: 0
+m=20 n=20
+True: 100              False: 0
+m=30 n=5
+True: 49              False: 51
+m=30 n=10
+True: 98              False: 2
+m=30 n=15
+True: 100              False: 0
+m=30 n=20
+True: 100              False: 0
+m=40 n=5
+True: 15              False: 85
+m=40 n=10
+True: 89              False: 11
+m=40 n=15
+True: 100              False: 0
+m=40 n=20
+True: 100              False: 0
+m=50 n=5
+True: 4              False: 96
+m=50 n=10
+True: 46              False: 54
+m=50 n=15
+True: 98              False: 2
+m=50 n=20
+True: 100              False: 0
+m=60 n=5
+True: 1              False: 99
+m=60 n=10
+True: 21              False: 79
+m=60 n=15
+True: 80              False: 20
+m=60 n=20
+True: 100              False: 0
+m=70 n=5
+True: 0              False: 100
+m=70 n=10
+True: 6              False: 94
+m=70 n=15
+True: 53              False: 47
+m=70 n=20
+True: 96              False: 4
+m=80 n=5
+True: 0              False: 100
+m=80 n=10
+True: 1              False: 99
+m=80 n=15
+True: 25              False: 75
+m=80 n=20
+True: 84              False: 16

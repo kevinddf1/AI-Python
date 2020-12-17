@@ -235,7 +235,7 @@ def genarateOneState():
 """ ------------------------------------------main-------------------------------------------------- """
 # this program generate many random initial states and test them with 3 different search alg to find the ave steps of them
 
-many=1000
+many=100
 print("running tests on "+ str(many)+  " random initial states...\n")
 print()
 with open('readme.txt', 'w') as f:
